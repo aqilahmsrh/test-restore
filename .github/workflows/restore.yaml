@@ -65,7 +65,7 @@ jobs:
           # LOCAL_DUMP_FILE: dex-restore-1.sql
           # aws s3 cp s3://bucket-test-777/restore-db . --version-id $latest_version_id
         run: |
-          latest_version_key=$(aws s3api list-object-versions --bucket $BUCKET_NAME | jq -r '.Versions | sort_by(.LastModified) | last | .Key')
+          latest_version_key=$(aws s3api list-object-versions --bucket $BUCKET_NAME --prefix restore-db | jq -r '.Versions | sort_by(.LastModified) | last | .Key')
           aws s3 cp s3://$BUCKET_NAME/$latest_version_key .
           file_name=$(basename "$latest_version_key") 
           echo "file_name=$file_name" >> $GITHUB_ENV
