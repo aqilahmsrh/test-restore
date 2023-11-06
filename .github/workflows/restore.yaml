@@ -58,11 +58,11 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          BUCKET_NAME: bucket-test-777
-          S3_DUMP_FILE: dump-dex-2610-amp-202310261709.sql
+          # BUCKET_NAME: bucket-test-777
+          # S3_DUMP_FILE: dump-dex-2610-amp-202310261709.sql
           LOCAL_DUMP_FILE: /restore/dex-restore-1.sql
         run: |
-          aws s3 cp s3://$BUCKET_NAME/$S3_DUMP_FILE $LOCAL_DUMP_FILE
+          aws s3 cp s3://bucket-test-777/restore-db/dump-dex-2610-amp-202310261709.sql $LOCAL_DUMP_FILE
 
       - name: Restore MySQL Database from Developer SQL File
         env:
