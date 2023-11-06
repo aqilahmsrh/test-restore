@@ -64,23 +64,8 @@ jobs:
           # S3_DUMP_FILE: dump-dex-2610-amp-202310261709.sql
           LOCAL_DUMP_FILE: dex-restore-1.sql
         run: |
-          # aws s3 cp s3://bucket-test-777/restore-db/dump-dex-2610-amp-202310261709.sql $LOCAL_DUMP_FILE
-
-          # # Get the latest version ID
-          # latest_version_id=$(aws s3api list-object-versions --bucket your-bucket-name | jq -r '.Versions | sort_by(.LastModified) | last | .VersionId')
-          
-          # # Download the latest version of the object
-          # aws s3 cp s3://your-bucket-name/your-object-key . --version-id $latest_version_id
-
-          # # Get the latest version ID
-          # latest_version_id=$(aws s3api list-object-versions --bucket your-bucket-name | jq -r '.Versions | sort_by(.LastModified) | last | .VersionId')
-          
-          # Get the key of the latest version
           latest_version_key=$(aws s3api list-object-versions --bucket your-bucket-name | jq -r '.Versions | sort_by(.LastModified) | last | .Key')
-          
-          # Download the latest version of the object using the version ID
           aws s3 cp s3://bucket-test-777/restore-db/$latest_version_key .
-
           echo "latest_version_key=$latest_version_key" >> $GITHUB_ENV
 
       - name: 'Create Artifacts'
