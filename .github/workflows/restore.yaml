@@ -67,14 +67,15 @@ jobs:
         run: |
           latest_version_key=$(aws s3api list-object-versions --bucket $BUCKET_NAME | jq -r '.Versions | sort_by(.LastModified) | last | .Key')
           aws s3 cp s3://$BUCKET_NAME/$latest_version_key .
-          echo "latest_version_key=$latest_version_key" >> $GITHUB_ENV
+          file_name=$(basename "$latest_version_key") 
+          echo "file_name=$file_name" >> $GITHUB_ENV
 
       - name: 'Create Artifacts'
         id: 'create_artifacts'
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.latest_version_key }}
-          path: ${{ env.latest_version_key }}
+          name: ${{ env.file_name }}
+          path: ./${{ env.latest_version_key }}
 
 
 
