@@ -1,76 +1,103 @@
 name: Backup and Restore MySQL Database
 
 on:
-  # workflow_dispatch:
-  # push:
-  #   branches:
-  #     - test/restore-backup
-  # pull_request:
-  #   branches:
-  #     - test/restore-backup
 
   workflow_dispatch:
     inputs:
-      version:
-        description: 'Repo Tag Name (Ex.: yyyymmdd-hhmmss)'
+      # version:
+      #   description: 'Repo Tag Name (Ex.: yyyymmdd-hhmmss)'
+      #   type: string
+      #   required: true
+      environment:
+        description: 'dexsit/dexuat/uat/sit'
         type: string
         required: true
 
 jobs:
-  # backup-database:
-  #   runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
-
-  #     - name: Create MySQL Database Dump
-  #       env:
-  #         DB_USER: ${{ secrets.DB_USER }} #admin
-  #         DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
-  #         DB_NAME: your_database_name #database-1
-  #         DUMP_FILE: path_to_your_backup.sql #test.sql
-  #       run: |
-  #         mysqldump -u $DB_USER -p$DB_PASSWORD $DB_NAME > $DUMP_FILE
-
-  #     - name: Upload Backup to S3
-  #       env:
-  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         BUCKET_NAME: your-s3-bucket-name #bucket-test-777
-  #         #S3_DUMP_FILE: path_to_database_backup.sql
-  #         #tengok naming in s3
-  #         #s3://$BUCKET_NAME/$S3_DUMP_FILE
-  #       run: |
-  #         aws s3 cp $DUMP_FILE s3://$BUCKET_NAME/
-
-
-  restore-database:
+  DEXSIT-backup-restore:
+    if: inputs.environment == 'dexsit'
     runs-on: ubuntu-latest
-    # environment:
-    #   name: dev
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      # - name: Create MySQL Database Dump
+      #   env:
+      #     DEXSIT_DB_USER: ${{ secrets.DEXSIT_DB_USER }}
+      #     DEXSIT_DB_PASSWORD: ${{ secrets.DEXSIT_DB_PASSWORD }} 
+      #     DEXSIT_DB_HOST: ${{ secrets.DEXSIT_DB_HOST }} 
+      #     DEXSIT_DB_NAME: test-db
+      #   run: |
+      #     TIMESTAMP=$(date +"%Y%m%d%H%M%S")
+      #     LOCAL_DUMP_FILE="dump-${{ inputs.environment }}-${TIMESTAMP}.sql"
+      #     mysqldump -h $DEXSIT_DB_HOST -u $DEXSIT_DB_USER -p$DEXSIT_DB_PASSWORD $DEXSIT_DB_NAME > $LOCAL_DUMP_FILE
+      #     echo "LOCAL_DUMP_FILE=$LOCAL_DUMP_FILE" >> $GITHUB_ENV
+      
+      # - name: check
+      #   run: |
+      #     echo ${{ env.LOCAL_DUMP_FILE }}
+
+      # - name: 'Create Artifacts'
+      #   id: 'create_artifacts'
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: ${{ env.LOCAL_DUMP_FILE }}
+      #     path: ${{ env.LOCAL_DUMP_FILE }}
+
+      # - name: Upload Backup to S3
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_REGION: ${{ secrets.AWS_REGION }}
+      #     BUCKET_NAME: s3://bucket-test-777/backup-db/
+      #   run: |
+      #     aws s3 cp ${{ env.LOCAL_DUMP_FILE }} $BUCKET_NAME
 
       - name: Download Developer SQL File from S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-          # BUCKET_NAME: bucket-test-777
+          BUCKET_NAME: s3://bucket-test-777/restore-db/dump-dex-2610-amp-202310261709.sql
           # S3_DUMP_FILE: dump-dex-2610-amp-202310261709.sql
           LOCAL_DUMP_FILE: dex-restore-1.sql
         run: |
-          aws s3 cp s3://bucket-test-777/restore-db/dump-dex-2610-amp-202310261709.sql $LOCAL_DUMP_FILE
+          # aws s3 cp s3://bucket-test-777/restore-db/dump-dex-2610-amp-202310261709.sql $LOCAL_DUMP_FILE
 
-      - name: Restore MySQL Database from Developer SQL File
-        env:
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
-          DB_HOST: ${{ secrets.DB_HOST }} 
-          DB_NAME: test-db
-          LOCAL_DUMP_FILE: dex-restore-1.sql
-        run: |
-          mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_NAME < $LOCAL_DUMP_FILE
+          # # Get the latest version ID
+          # latest_version_id=$(aws s3api list-object-versions --bucket your-bucket-name | jq -r '.Versions | sort_by(.LastModified) | last | .VersionId')
+          
+          # # Download the latest version of the object
+          # aws s3 cp s3://your-bucket-name/your-object-key . --version-id $latest_version_id
+
+          # # Get the latest version ID
+          # latest_version_id=$(aws s3api list-object-versions --bucket your-bucket-name | jq -r '.Versions | sort_by(.LastModified) | last | .VersionId')
+          
+          # Get the key of the latest version
+          latest_version_key=$(aws s3api list-object-versions --bucket your-bucket-name | jq -r '.Versions | sort_by(.LastModified) | last | .Key')
+          
+          # Download the latest version of the object using the version ID
+          aws s3 cp s3://bucket-test-777/restore-db/$latest_version_key .
+
+          echo "latest_version_key=$latest_version_key" >> $GITHUB_ENV
+
+      - name: 'Create Artifacts'
+        id: 'create_artifacts'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.latest_version_key }}
+          path: ${{ env.latest_version_key }}
+
+
+
+      # - name: Restore MySQL Database from Developer SQL File
+      #   env:
+      #     DB_USER: ${{ secrets.DB_USER }}
+      #     DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
+      #     DB_HOST: ${{ secrets.DB_HOST }} 
+      #     DB_NAME: test-db
+      #     LOCAL_DUMP_FILE: dex-restore-1.sql
+      #   run: |
+      #     mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_NAME < $LOCAL_DUMP_FILE
