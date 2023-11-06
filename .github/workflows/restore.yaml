@@ -25,14 +25,14 @@ jobs:
 
       - name: Create MySQL Database Dump
         env:
-          DEXSIT_DB_USER: ${{ secrets.DEXSIT_DB_USER }}
-          DEXSIT_DB_PASSWORD: ${{ secrets.DEXSIT_DB_PASSWORD }} 
-          DEXSIT_DB_HOST: ${{ secrets.DEXSIT_DB_HOST }} 
-          DEXSIT_DB_NAME: test-db
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
+          DB_HOST: ${{ secrets.DB_HOST }} 
+          DB_NAME: test-db
         run: |
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")
           LOCAL_DUMP_FILE="dump-${{ inputs.environment }}-${TIMESTAMP}.sql"
-          mysqldump -h $DEXSIT_DB_HOST -u $DEXSIT_DB_USER -p$DEXSIT_DB_PASSWORD $DEXSIT_DB_NAME > $LOCAL_DUMP_FILE
+          mysqldump -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_NAME > $LOCAL_DUMP_FILE
           echo "LOCAL_DUMP_FILE=$LOCAL_DUMP_FILE" >> $GITHUB_ENV
       
       - name: check
