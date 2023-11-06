@@ -54,21 +54,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # - name: Download Developer SQL File from S3
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     BUCKET_NAME: your-s3-bucket-name #bucket-test-777
-      #     #S3_DUMP_FILE: path_to_developer_upload.sql 
-      #     LOCAL_DUMP_FILE: /restore/developer_upload.sql
-      #   run: |
-      #     aws s3 cp s3://$BUCKET_NAME/$S3_DUMP_FILE $LOCAL_DUMP_FILE
+      - name: Download Developer SQL File from S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          BUCKET_NAME: bucket-test-777
+          S3_DUMP_FILE: dump-dex-2610-amp-202310261709.sql
+          LOCAL_DUMP_FILE: /restore/dex-restore-1.sql
+        run: |
+          aws s3 cp s3://$BUCKET_NAME/$S3_DUMP_FILE $LOCAL_DUMP_FILE
 
-      # - name: Restore MySQL Database from Developer SQL File
-      #   env:
-      #     DB_USER: ${{ secrets.DB_USER }} #admin
-      #     DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
-      #     DB_NAME: your_database_name #database-1
-      #     DUMP_FILE: $LOCAL_DUMP_FILE
-      #   run: |
-      #     mysql -u $DB_USER -p$DB_PASSWORD $DB_NAME < $DUMP_FILE
+      - name: Restore MySQL Database from Developer SQL File
+        env:
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
+          DB_NAME: test-db
+        run: |
+          mysql -u $DB_USER -p$DB_PASSWORD $DB_NAME < $LOCAL_DUMP_FILE
