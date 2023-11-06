@@ -1,0 +1,74 @@
+name: Backup and Restore MySQL Database
+
+on:
+  # workflow_dispatch:
+  # push:
+  #   branches:
+  #     - test/restore-backup
+  # pull_request:
+  #   branches:
+  #     - test/restore-backup
+
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Repo Tag Name (Ex.: yyyymmdd-hhmmss)'
+        type: string
+        required: true
+
+jobs:
+  # backup-database:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+
+  #     - name: Create MySQL Database Dump
+  #       env:
+  #         DB_USER: ${{ secrets.DB_USER }} #admin
+  #         DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
+  #         DB_NAME: your_database_name #database-1
+  #         DUMP_FILE: path_to_your_backup.sql #test.sql
+  #       run: |
+  #         mysqldump -u $DB_USER -p$DB_PASSWORD $DB_NAME > $DUMP_FILE
+
+  #     - name: Upload Backup to S3
+  #       env:
+  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         BUCKET_NAME: your-s3-bucket-name #bucket-test-777
+  #         #S3_DUMP_FILE: path_to_database_backup.sql
+  #         #tengok naming in s3
+  #         #s3://$BUCKET_NAME/$S3_DUMP_FILE
+  #       run: |
+  #         aws s3 cp $DUMP_FILE s3://$BUCKET_NAME/
+
+
+  restore-database:
+    runs-on: ubuntu-latest
+    # environment:
+    #   name: dev
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # - name: Download Developer SQL File from S3
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     BUCKET_NAME: your-s3-bucket-name #bucket-test-777
+      #     #S3_DUMP_FILE: path_to_developer_upload.sql 
+      #     LOCAL_DUMP_FILE: /restore/developer_upload.sql
+      #   run: |
+      #     aws s3 cp s3://$BUCKET_NAME/$S3_DUMP_FILE $LOCAL_DUMP_FILE
+
+      # - name: Restore MySQL Database from Developer SQL File
+      #   env:
+      #     DB_USER: ${{ secrets.DB_USER }} #admin
+      #     DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
+      #     DB_NAME: your_database_name #database-1
+      #     DUMP_FILE: $LOCAL_DUMP_FILE
+      #   run: |
+      #     mysql -u $DB_USER -p$DB_PASSWORD $DB_NAME < $DUMP_FILE
