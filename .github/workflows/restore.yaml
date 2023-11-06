@@ -21,39 +21,39 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      # - name: Create MySQL Database Dump
-      #   env:
-      #     DEXSIT_DB_USER: ${{ secrets.DEXSIT_DB_USER }}
-      #     DEXSIT_DB_PASSWORD: ${{ secrets.DEXSIT_DB_PASSWORD }} 
-      #     DEXSIT_DB_HOST: ${{ secrets.DEXSIT_DB_HOST }} 
-      #     DEXSIT_DB_NAME: test-db
-      #   run: |
-      #     TIMESTAMP=$(date +"%Y%m%d%H%M%S")
-      #     LOCAL_DUMP_FILE="dump-${{ inputs.environment }}-${TIMESTAMP}.sql"
-      #     mysqldump -h $DEXSIT_DB_HOST -u $DEXSIT_DB_USER -p$DEXSIT_DB_PASSWORD $DEXSIT_DB_NAME > $LOCAL_DUMP_FILE
-      #     echo "LOCAL_DUMP_FILE=$LOCAL_DUMP_FILE" >> $GITHUB_ENV
+      - name: Create MySQL Database Dump
+        env:
+          DEXSIT_DB_USER: ${{ secrets.DEXSIT_DB_USER }}
+          DEXSIT_DB_PASSWORD: ${{ secrets.DEXSIT_DB_PASSWORD }} 
+          DEXSIT_DB_HOST: ${{ secrets.DEXSIT_DB_HOST }} 
+          DEXSIT_DB_NAME: test-db
+        run: |
+          TIMESTAMP=$(date +"%Y%m%d%H%M%S")
+          LOCAL_DUMP_FILE="dump-${{ inputs.environment }}-${TIMESTAMP}.sql"
+          mysqldump -h $DEXSIT_DB_HOST -u $DEXSIT_DB_USER -p$DEXSIT_DB_PASSWORD $DEXSIT_DB_NAME > $LOCAL_DUMP_FILE
+          echo "LOCAL_DUMP_FILE=$LOCAL_DUMP_FILE" >> $GITHUB_ENV
       
-      # - name: check
-      #   run: |
-      #     echo ${{ env.LOCAL_DUMP_FILE }}
+      - name: check
+        run: |
+          echo ${{ env.LOCAL_DUMP_FILE }}
 
-      # - name: 'Create Artifacts'
-      #   id: 'create_artifacts'
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: ${{ env.LOCAL_DUMP_FILE }}
-      #     path: ${{ env.LOCAL_DUMP_FILE }}
+      - name: 'Create Artifacts'
+        id: 'create_artifacts_backup'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.LOCAL_DUMP_FILE }}
+          path: ${{ env.LOCAL_DUMP_FILE }}
 
-      # - name: Upload Backup to S3
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     AWS_REGION: ${{ secrets.AWS_REGION }}
-      #     BUCKET_NAME: s3://bucket-test-777/backup-db/
-      #   run: |
-      #     aws s3 cp ${{ env.LOCAL_DUMP_FILE }} $BUCKET_NAME
+      - name: Upload Backup to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          BUCKET_NAME: s3://bucket-test-777/backup-db/
+        run: |
+          aws s3 cp ${{ env.LOCAL_DUMP_FILE }} $BUCKET_NAME
 
       - name: Download Developer SQL File from S3
         env:
@@ -71,20 +71,18 @@ jobs:
           echo "file_name=$file_name" >> $GITHUB_ENV
 
       - name: 'Create Artifacts'
-        id: 'create_artifacts'
+        id: 'create_artifacts_restore'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.file_name }}
           path: ./${{ env.file_name }}
 
-
-
-      # - name: Restore MySQL Database from Developer SQL File
-      #   env:
-      #     DB_USER: ${{ secrets.DB_USER }}
-      #     DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
-      #     DB_HOST: ${{ secrets.DB_HOST }} 
-      #     DB_NAME: test-db
-      #     LOCAL_DUMP_FILE: dex-restore-1.sql
-      #   run: |
-      #     mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_NAME < $LOCAL_DUMP_FILE
+      - name: Restore MySQL Database from Developer SQL File
+        env:
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
+          DB_HOST: ${{ secrets.DB_HOST }} 
+          DB_NAME: test-db
+          LOCAL_DUMP_FILE: ./${{ env.file_name }}
+        run: |
+          mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_NAME < $LOCAL_DUMP_FILE
