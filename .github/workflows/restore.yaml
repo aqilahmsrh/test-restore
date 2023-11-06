@@ -75,7 +75,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.file_name }}
-          path: ./${{ env.latest_version_key }}
+          path: ./${{ env.file_name }}
 
 
 
