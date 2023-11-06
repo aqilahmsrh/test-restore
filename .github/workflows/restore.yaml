@@ -43,7 +43,7 @@ jobs:
         id: 'create_artifacts_backup'
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.LOCAL_DUMP_FILE }}
+          name: backup-${{ env.LOCAL_DUMP_FILE }}
           path: ${{ env.LOCAL_DUMP_FILE }}
 
       - name: Upload Backup to S3
@@ -74,7 +74,7 @@ jobs:
         id: 'create_artifacts_restore'
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.file_name }}
+          name: restore-${{ env.file_name }}
           path: ./${{ env.file_name }}
 
       - name: Restore MySQL Database from Developer SQL File
