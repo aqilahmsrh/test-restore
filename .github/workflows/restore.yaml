@@ -60,12 +60,12 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-          BUCKET_NAME: s3://bucket-test-777/restore-db/dump-dex-2610-amp-202310261709.sql
-          # S3_DUMP_FILE: dump-dex-2610-amp-202310261709.sql
-          LOCAL_DUMP_FILE: dex-restore-1.sql
+          # BUCKET_NAME: s3://bucket-test-777/restore-db/dump-dex-2610-amp-202310261709.sql
+          # # S3_DUMP_FILE: dump-dex-2610-amp-202310261709.sql
+          # LOCAL_DUMP_FILE: dex-restore-1.sql
         run: |
-          latest_version_key=$(aws s3api list-object-versions --bucket bucket-test-777 | jq -r '.Versions | sort_by(.LastModified) | last | .Key')
-          aws s3 cp s3://bucket-test-777/restore-db/$latest_version_key .
+          latest_version_key=$(aws s3api list-object-versions --bucket bucket-test-777 --prefix restore-db| jq -r '.Versions | sort_by(.LastModified) | last | .Key')
+          aws s3 cp $latest_version_key .
           echo "latest_version_key=$latest_version_key" >> $GITHUB_ENV
 
       - name: 'Create Artifacts'
