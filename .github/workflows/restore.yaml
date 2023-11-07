@@ -19,7 +19,7 @@ jobs:
     if: inputs.environment == 'dexsit'
     runs-on: ubuntu-latest
     outputs:
-      LOCAL_DUMP_FILE: ${{ steps.restorefile.outputs.LOCAL_DUMP_FILE }}
+      file_name: ${{ steps.restorefile.outputs.file_name }}
 
     steps:
       - name: Checkout Code
@@ -72,14 +72,14 @@ jobs:
 
       - name: 2nd Check
         run: |
-          echo ${{ steps.restorefile.outputs.LOCAL_DUMP_FILE }}
+          echo ${{ steps.restorefile.outputs.file_name }}
 
       - name: Create Restore File Artifacts
         id: 'create_artifacts_restore'
         uses: actions/upload-artifact@v3
         with:
-          name: restore-${{ steps.restorefile.outputs.LOCAL_DUMP_FILE }}
-          path: ./${{ steps.restorefile.outputs.LOCAL_DUMP_FILE }}
+          name: restore-${{ steps.restorefile.outputs.file_name }}
+          path: ./${{ steps.restorefile.outputs.file_name }}
 
         
   # DEXSIT-restore:
