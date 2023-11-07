@@ -98,7 +98,7 @@ jobs:
     steps:
     
       - name: Download Restore File Artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: restore-${{ needs.DEXSIT-from-S3.outputs.file_name }}
           path: ./test-restore
