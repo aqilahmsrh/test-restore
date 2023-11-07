@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Create MySQL Database Dump
@@ -35,18 +35,18 @@ jobs:
           mysqldump -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_NAME > $LOCAL_DUMP_FILE
           echo "LOCAL_DUMP_FILE=$LOCAL_DUMP_FILE" >> $GITHUB_ENV
       
-      - name: check
+      - name: 1st Check
         run: |
           echo ${{ env.LOCAL_DUMP_FILE }}
 
-      - name: 'Create Artifacts'
+      - name: Create Backup File Artifacts
         id: 'create_artifacts_backup'
         uses: actions/upload-artifact@v3
         with:
           name: backup-${{ env.LOCAL_DUMP_FILE }}
           path: ${{ env.LOCAL_DUMP_FILE }}
 
-      - name: Upload Backup to S3
+      - name: Upload Backup to AWS S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -55,29 +55,30 @@ jobs:
         run: |
           aws s3 cp ${{ env.LOCAL_DUMP_FILE }} $BUCKET_NAME
 
-      - name: Download Developer SQL File from S3
+      - name: Download Developer SQL File from AWS S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           BUCKET_NAME: bucket-test-777
-          # # S3_DUMP_FILE: dump-dex-2610-amp-202310261709.sql
-          # LOCAL_DUMP_FILE: dex-restore-1.sql
-          # aws s3 cp s3://bucket-test-777/restore-db . --version-id $latest_version_id
         run: |
           latest_version_key=$(aws s3api list-object-versions --bucket $BUCKET_NAME --prefix restore-db | jq -r '.Versions | sort_by(.LastModified) | last | .Key')
           aws s3 cp s3://$BUCKET_NAME/$latest_version_key .
           file_name=$(basename "$latest_version_key") 
           echo "file_name=$file_name" >> $GITHUB_ENV
 
-      - name: 'Create Artifacts'
+      - name: 2nd Check
+        run: |
+          echo ${{ env.file_name }}
+
+      - name: Create Restore File Artifacts
         id: 'create_artifacts_restore'
         uses: actions/upload-artifact@v3
         with:
           name: restore-${{ env.file_name }}
           path: ./${{ env.file_name }}
 
-      - name: Restore MySQL Database from Developer SQL File
+      - name: Restore MySQL Database
         env:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
