@@ -96,12 +96,7 @@ jobs:
        name: try
        
     steps:
-      - name: Download Restore File Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: restore-${{ needs.DEXSIT-from-S3.outputs.file_name }} 
-          path: ./${{ needs.DEXSIT-from-S3.outputs.file_name }}
-          
+    
       - name: Restore MySQL Database
         env:
           DB_USER: ${{ secrets.DB_USER }}
