@@ -87,12 +87,18 @@ jobs:
        name: try
        
     steps:
+      - name: Download Restore File Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: restore-${{ env.file_name }}  # Use the same name as in the 'create_artifacts_restore' step
+          path: ./restored-files
+          
       - name: Restore MySQL Database
         env:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
           DB_HOST: ${{ secrets.DB_HOST }} 
           DB_NAME: test-db
-          LOCAL_DUMP_FILE: ${{ env.file_name }}
+          LOCAL_DUMP_FILE: ./restored-files/${{ env.file_name }}
         run: |
           mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_NAME < $LOCAL_DUMP_FILE
