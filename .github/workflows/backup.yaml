@@ -27,7 +27,7 @@ jobs:
           SIT_DB_USER: ${{ secrets.SIT_DB_USER }}
           SIT_DB_PASSWORD: ${{ secrets.SIT_DB_PASSWORD }} 
           SIT_DB_HOST: ${{ secrets.SIT_DB_HOST }} 
-          SIT_DB_NAME: test-db
+          SIT_DB_NAME: ${{ secrets.SIT_DB_NAME }}
         run: |
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")
           SIT_LOCAL_DUMP_FILE="dump-127.0.0.1-sit-${TIMESTAMP}.sql"
@@ -43,7 +43,7 @@ jobs:
           DEX_SIT_DB_USER: ${{ secrets.DEX_SIT_DB_USER }}
           DEX_SIT_DB_PASSWORD: ${{ secrets.DEX_SIT_DB_PASSWORD }} 
           DEX_SIT_DB_HOST: ${{ secrets.DEX_SIT_DB_HOST }} 
-          DEX_SIT_DB_NAME: test-db
+          DEX_SIT_DB_NAME: ${{ secrets.DEX_SIT_DB_NAME }}
         run: |
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")
           DEXSIT_LOCAL_DUMP_FILE="dump-127.0.0.1-dexsit-${TIMESTAMP}.sql"
