@@ -57,6 +57,7 @@ jobs:
 
       - name: Zip compress dumps
         run: |
+          TIMESTAMP=$(date +"%Y%m%d%H%M%S")
           ZIP_FILE="dumps-sit-${TIMESTAMP}.zip"
           zip -r $ZIP_FILE $SIT_LOCAL_DUMP_FILE $DEXSIT_LOCAL_DUMP_FILE
           echo "ZIP_FILE=$ZIP_FILE" >> $GITHUB_ENV
