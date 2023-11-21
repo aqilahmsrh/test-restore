@@ -1,4 +1,4 @@
-name: Backup and Restore MySQL Database
+name: Restore MySQL Database
 
 on:
 
@@ -9,14 +9,14 @@ on:
       #   type: string
       #   required: true
       environment:
-        description: 'dexsit/dexuat/uat/sit'
+        description: 'pending'
         type: string
         required: true
 
 jobs:
 
   DEXSIT-backup:
-    if: inputs.environment == 'dexsit'
+    if: inputs.environment == 'pending'
     runs-on: ubuntu-latest
 
     steps:
@@ -56,7 +56,7 @@ jobs:
           aws s3 cp ${{ env.LOCAL_DUMP_FILE }} $BUCKET_NAME
           
   DEXSIT-from-S3:
-    if: inputs.environment == 'dexsit'
+    if: inputs.environment == 'pending'
     runs-on: ubuntu-latest
     needs: [DEXSIT-backup]
     outputs:
@@ -89,7 +89,7 @@ jobs:
 
         
   DEXSIT-restore:
-    if: inputs.environment == 'dexsit'
+    if: inputs.environment == 'pending'
     runs-on: ubuntu-latest
     needs: [DEXSIT-from-S3]
     environment:
