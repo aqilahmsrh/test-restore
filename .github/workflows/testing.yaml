@@ -33,15 +33,20 @@ jobs:
           aws s3 cp test.txt $BUCKET_NAME
 
       - name: Generate S3 Object URL
-        id: generate-s3-url
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.DEVOPS_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.DEVOPS_AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ap-southeast-1
-        run: |
-          DOWNLOAD_URL=$(aws s3 presign s3://bucket-test-777/backup-db/test.txt --expires-in 3600 --region ap-southeast-1)
-          echo "DOWNLOAD_URL=$DOWNLOAD_URL" >> $GITHUB_ENV
+        uses: anton-yurchenko/s3-pre-signed-url@v1
+        id: s3
+        with:
+          access_key: ${{ secrets.DEVOPS_AWS_ACCESS_KEY_ID }}
+          secret_access_key: ${{ secrets.DEVOPS_AWS_SECRET_ACCESS_KEY }}
+          bucket: s3://bucket-test-777/backup-db/
+          path: ./test.txt
+          
+      - run: echo ${{ steps.s3.outputs.url }}
+        
+      # - run: |
+      #     DOWNLOAD_URL=$(aws s3 presign s3://bucket-test-777/backup-db/test.txt --expires-in 3600 --region ap-southeast-1)
+      #     echo "DOWNLOAD_URL=$DOWNLOAD_URL" >> $GITHUB_ENV
 
-      - name: Echo S3 Object URL
-        run: |
-          echo "Download link for the uploaded object: $DOWNLOAD_URL"
+      # - name: Echo S3 Object URL
+      #   run: |
+      #     echo "Download link for the uploaded object: $DOWNLOAD_URL"
