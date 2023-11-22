@@ -36,10 +36,12 @@ jobs:
         uses: anton-yurchenko/s3-pre-signed-url@v1
         id: s3
         with:
+          region: ap-southeast-1
           access_key: ${{ secrets.DEVOPS_AWS_ACCESS_KEY_ID }}
           secret_access_key: ${{ secrets.DEVOPS_AWS_SECRET_ACCESS_KEY }}
           bucket: s3://bucket-test-777/backup-db/
           path: ./test.txt
+          expires_in: 3600
           
       - run: echo ${{ steps.s3.outputs.url }}
         
