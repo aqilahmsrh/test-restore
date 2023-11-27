@@ -39,9 +39,10 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEVOPS_AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          DOWNLOAD_URL=$(aws s3 presign s3://bucket-test-777/backup-db/test.txt --expires-in 3600 --region ap-southeast-1)
-          echo "DOWNLOAD_URL=$DOWNLOAD_URL" >> $GITHUB_ENV
-          echo "This is the link: $DOWNLOAD_URL"
+          aws s3 presign s3://bucket-test-777/backup-db/test.txt
+          # DOWNLOAD_URL=$(aws s3 presign s3://bucket-test-777/backup-db/test.txt --expires-in 3600 --region ap-southeast-1)
+          # echo "DOWNLOAD_URL=$DOWNLOAD_URL" >> $GITHUB_ENV
+          # echo "This is the link: $DOWNLOAD_URL"
 
       # - name: Echo S3 Object URL
       #   run: |
