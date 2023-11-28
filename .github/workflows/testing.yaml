@@ -34,16 +34,14 @@ jobs:
           echo "S3 URI: $BUCKET_NAME/test.txt"
 
       - name: Send email
-        uses: dawidd6/action-send-mail@v1.3.0
+        uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 465
-          username: ${{ secrets.GMAIL_ADDRESS }}
-          password: ${{ secrets.GMAIL_PASS }}
           subject: Testing
           body: testing 123
           to: wpaqilah@gmail.com
-          from: ${{ secrets.GMAIL_ADDRESS }}
+          from: Nur Aqilah Maisarah
 
       # - name: Generate S3 Object URL
       #   id: s3
