@@ -3,9 +3,9 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
-sender_email = ${{ secrets.SENDER_EMAIL }}
-receiver_email = ${{ secrets.RECEIVER_EMAIL }}
-password = ${{ secrets.PASSWORD_EMAIL }}
+sender_email = os.environ.get('SENDER_EMAIL')
+receiver_email = os.environ.get('RECEIVER_EMAIL')
+password = os.environ.get('PASSWORD_EMAIL')
 
 msg = MIMEMultipart()
 msg['From'] = sender_email
