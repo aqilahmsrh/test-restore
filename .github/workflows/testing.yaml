@@ -24,7 +24,7 @@ on:
 jobs:
 
   DEXSIT-backup:
-    if: inputs.environment == 'test'
+    # if: inputs.environment == 'test'
     runs-on: ubuntu-latest
 
     steps:
