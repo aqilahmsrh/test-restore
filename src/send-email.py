@@ -7,13 +7,14 @@ from email.header import Header
 sender_email = os.environ.get('SENDER_EMAIL')
 receiver_email = os.environ.get('RECEIVER_EMAIL')
 password = os.environ.get('PASSWORD_EMAIL')
+s3_uri = os.environ.get('S3_URI')
 
 msg = MIMEMultipart()
 msg['From'] = sender_email
 msg['To'] = receiver_email
 msg['Subject'] = Header('Some Title', 'utf-8').encode()
 
-body = 'Hello World!'
+body = f"Hello World!\n\nThis is the S3 link: {s3_uri}"
 
 msg_content = MIMEText(body, 'plain', 'utf-8')
 msg.attach(msg_content)
