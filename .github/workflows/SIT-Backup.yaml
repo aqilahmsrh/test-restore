@@ -1,21 +1,28 @@
 name: SIT Backup MySQL Database
 
 on:
-
   workflow_dispatch:
     inputs:
       # version:
       #   description: 'Repo Tag Name (Ex.: yyyymmdd-hhmmss)'
       #   type: string
       #   required: true
-      environment:
-        description: 'uat/sit'
+      # environment:
+      #   description: 'uat/sit'
+      #   type: string
+      #   required: true
+      name:
+        description: 'short name'
+        type: string
+        required: true
+      email:
+        description: 'example@regovtech.com'
         type: string
         required: true
 
 jobs:
   SIT-backup:
-    if: inputs.environment == 'sit'
+    # if: inputs.environment == 'sit'
     runs-on: ubuntu-latest
 
     steps:
