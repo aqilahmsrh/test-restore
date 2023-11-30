@@ -28,20 +28,17 @@ jobs:
         with:
           python-version: 3.7
           
-      # - name: Install dependencies
-      #   env:
-      #     SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
-      #     RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
-      #     PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
-      #   run: |
-      #     echo "SENDER_EMAIL: $SENDER_EMAIL"
-      #     echo "RECEIVER_EMAIL: $RECEIVER_EMAIL"
-      #     echo "PASSWORD_EMAIL: $PASSWORD_EMAIL"
-      #     python -m pip install --upgrade pip
-      #     pip install pipenv 
-      #     pipenv install
-      #     pwd
-      #     pipenv run python src/send-email.py
+      - name: Install dependencies
+        env:
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
+          PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install pipenv 
+          pipenv install
+          pwd
+          pipenv run python src/send-email.py
       
       # - name: Upload to AWS S3
       #   env:
