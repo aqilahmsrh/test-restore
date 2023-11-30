@@ -25,10 +25,10 @@ jobs:
 
       - name: Create Test Database Dump
         env:
-          SIT_DB_USER: ${{ secrets.DB_USER }}
-          SIT_DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
-          SIT_DB_HOST: ${{ secrets.DB_HOST }} 
-          SIT_DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
+          DB_HOST: ${{ secrets.DB_HOST }} 
+          DB_NAME: ${{ secrets.DB_NAME }}
         run: |
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")
           SIT_LOCAL_DUMP_FILE="dump-127.0.0.1-sit-${TIMESTAMP}.sql"
