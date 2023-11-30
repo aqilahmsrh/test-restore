@@ -38,7 +38,7 @@ jobs:
           pip install pipenv 
           pipenv install
           pwd
-          pipenv run python src/send_email.py
+          pipenv run python src/send-email.py
       
       # - name: Upload to AWS S3
       #   env:
