@@ -23,11 +23,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.7
-
       - name: Create Test Database Dump
         env:
           SIT_DB_USER: ${{ secrets.DB_USER }}
@@ -58,6 +53,11 @@ jobs:
           S3_URI="$SIT_BUCKET_NAME/${{ env.SIT_LOCAL_DUMP_FILE }}"
           echo "S3_URI=$S3_URI" >> $GITHUB_ENV
           echo "Uploaded backup to S3: $S3_URI"
+          
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
           
       - name: Install dependencies
         env:
