@@ -1,4 +1,4 @@
-name: Backup MySQL Database
+name: SIT Backup MySQL Database
 
 on:
 
