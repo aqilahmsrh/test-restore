@@ -34,6 +34,9 @@ jobs:
           RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
           PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
         run: |
+          echo "SENDER_EMAIL: $SENDER_EMAIL"
+          echo "RECEIVER_EMAIL: $RECEIVER_EMAIL"
+          echo "PASSWORD_EMAIL: $PASSWORD_EMAIL"
           python -m pip install --upgrade pip
           pip install pipenv 
           pipenv install
