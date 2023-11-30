@@ -14,7 +14,8 @@ msg['From'] = sender_email
 msg['To'] = receiver_email
 msg['Subject'] = Header('Some Title', 'utf-8').encode()
 
-body = f"Hello World!\n\nThis is the S3 link: {s3_uri}"
+body = 'Hello World!'
+# body = f"Hello World!\n\nThis is the S3 link: {s3_uri}"
 
 msg_content = MIMEText(body, 'plain', 'utf-8')
 msg.attach(msg_content)
