@@ -50,7 +50,7 @@ jobs:
           SIT_BUCKET_NAME: ${{ secrets.DEVOPS_S3_BUCKET }}
         run: |
           aws s3 cp ${{ env.SIT_LOCAL_DUMP_FILE }} $SIT_BUCKET_NAME
-          S3_URI="$SIT_BUCKET_NAME/${{ env.SIT_LOCAL_DUMP_FILE }}"
+          S3_URI="$SIT_BUCKET_NAME${{ env.SIT_LOCAL_DUMP_FILE }}"
           echo "S3_URI=$S3_URI" >> $GITHUB_ENV
           echo "Uploaded backup to S3: $S3_URI"
           
