@@ -28,15 +28,36 @@ jobs:
         with:
           python-version: 3.7
 
-      - name: Upload to AWS S3
+      - name: Create Test Database Dump
+        env:
+          SIT_DB_USER: ${{ secrets.DB_USER }}
+          SIT_DB_PASSWORD: ${{ secrets.DB_PASSWORD }} 
+          SIT_DB_HOST: ${{ secrets.DB_HOST }} 
+          SIT_DB_NAME: ${{ secrets.DB_NAME }}
+        run: |
+          TIMESTAMP=$(date +"%Y%m%d%H%M%S")
+          SIT_LOCAL_DUMP_FILE="dump-127.0.0.1-sit-${TIMESTAMP}.sql"
+          mysqldump -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_NAME > $SIT_LOCAL_DUMP_FILE
+          echo "SIT_LOCAL_DUMP_FILE=$SIT_LOCAL_DUMP_FILE" >> $GITHUB_ENV
+
+      - name: Create Backup File Artifacts
+        id: 'create_artifacts'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.SIT_LOCAL_DUMP_FILE }}
+          path: ${{ env.SIT_LOCAL_DUMP_FILE }}
+
+      - name: Upload Backup to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEVOPS_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEVOPS_AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-          BUCKET_NAME: s3://bucket-test-777/backup-db/
+          SIT_BUCKET_NAME: ${{ secrets.DEVOPS_S3_BUCKET }}
         run: |
-          aws s3 cp test.txt $BUCKET_NAME
-          echo "S3 URI: $BUCKET_NAME/test.txt"
+          aws s3 cp ${{ env.SIT_LOCAL_DUMP_FILE }} $SIT_BUCKET_NAME
+          S3_URI="$SIT_BUCKET_NAME/${{ env.SIT_LOCAL_DUMP_FILE }}"
+          echo "S3_URI=$S3_URI" >> $GITHUB_ENV
+          echo "Uploaded backup to S3: $S3_URI"
           
       - name: Install dependencies
         env:
