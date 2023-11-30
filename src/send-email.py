@@ -7,7 +7,7 @@ from email.header import Header
 sender_email = os.environ.get('SENDER_EMAIL')
 receiver_email = os.environ.get('RECEIVER_EMAIL')
 password = os.environ.get('PASSWORD_EMAIL')
-s3_uri = os.environ.get('S3_URI')
+workflow_link = os.environ.get('WORKFLOW_LINK')
 
 msg = MIMEMultipart()
 msg['From'] = sender_email
