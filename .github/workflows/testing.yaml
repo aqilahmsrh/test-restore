@@ -65,13 +65,15 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEVOPS_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEVOPS_AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-          BUCKET_NAME: s3://bucket-test-777/backup-db/
+          BUCKET_NAME: ${{ secrets.DEVOPS_S3_BUCKET }}
         run: |
             TIMESTAMP=$(date +"%Y%m%d%H%M%S")
             SIT_LOCAL_DUMP_FILE="dump-127.0.0.1-sit-${TIMESTAMP}.sql"
             mv test.txt $SIT_LOCAL_DUMP_FILE
             aws s3 cp $SIT_LOCAL_DUMP_FILE $BUCKET_NAME
-            echo "S3 URI: $BUCKET_NAME$SIT_LOCAL_DUMP_FILE"
+            S3_URI="$BUCKET_NAME${{ env.SIT_LOCAL_DUMP_FILE }}"
+            echo "S3_URI=$S3_URI" >> $GITHUB_ENV
+            echo "Uploaded backup to S3: $S3_URI"
 
       # - name: Create Test Database Dump
       #   env:
