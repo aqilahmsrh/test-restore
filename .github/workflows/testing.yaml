@@ -103,7 +103,7 @@ jobs:
           pip install pipenv 
           pipenv install
           pwd
-          pipenv run python src/send-s3.py
+          pipenv run python src/send-bucket.py
       
       # - name: Upload to AWS S3
       #   env:
