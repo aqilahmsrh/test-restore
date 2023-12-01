@@ -71,7 +71,7 @@ jobs:
             SIT_LOCAL_DUMP_FILE="dump-127.0.0.1-sit-${TIMESTAMP}.sql"
             mv test.txt $SIT_LOCAL_DUMP_FILE
             aws s3 cp $SIT_LOCAL_DUMP_FILE $BUCKET_NAME
-            S3_URI="$BUCKET_NAME${{ env.SIT_LOCAL_DUMP_FILE }}"
+            S3_URI="$BUCKET_NAME$SIT_LOCAL_DUMP_FILE"
             echo "S3_URI=$S3_URI" >> $GITHUB_ENV
             echo "Uploaded backup to S3: $S3_URI"
 
