@@ -44,6 +44,7 @@ jobs:
           #devops email
           REQUESTED_USER: ${{ github.event.inputs.name }}
           PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
+          ENV: "SIT"
         run: |
           python -m pip install --upgrade pip
           pip install pipenv 
@@ -130,6 +131,7 @@ jobs:
           RECEIVER_EMAIL: ${{ github.event.inputs.email }}
           PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
           S3_URI: ${{ env.S3_URI }}
+          ENV: "SIT"
         run: |
           python -m pip install --upgrade pip
           pip install pipenv 
