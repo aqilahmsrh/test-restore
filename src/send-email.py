@@ -7,14 +7,14 @@ from email.header import Header
 sender_email = os.environ.get('SENDER_EMAIL')
 receiver_email = os.environ.get('RECEIVER_EMAIL')
 password = os.environ.get('PASSWORD_EMAIL')
-workflow_link = os.environ.get('WORKFLOW_LINK')
+requested_user = os.environ.get('REQUESTED_USER')
 
 msg = MIMEMultipart()
 msg['From'] = sender_email
 msg['To'] = receiver_email
 msg['Subject'] = Header('Some Title', 'utf-8').encode()
 
-body = f"Hi DevOps, your workflow: link "
+body = f"Hi DevOps, your SIT MySQL DUmp is triggered; {workflow_link} by {requested_user}"
 
 msg_content = MIMEText(body, 'plain', 'utf-8')
 msg.attach(msg_content)
