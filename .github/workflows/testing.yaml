@@ -57,6 +57,9 @@ jobs:
        name: try
        
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
       - name: Create Test Database Dump
         env:
           DB_USER: ${{ secrets.DB_USER }}
