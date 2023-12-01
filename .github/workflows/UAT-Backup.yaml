@@ -1,4 +1,4 @@
-name: Backup MySQL Database
+name: UAT Backup MySQL Database
 
 on:
 
