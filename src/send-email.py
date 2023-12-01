@@ -8,6 +8,7 @@ sender_email = os.environ.get('SENDER_EMAIL')
 receiver_email = os.environ.get('RECEIVER_EMAIL')
 password = os.environ.get('PASSWORD_EMAIL')
 requested_user = os.environ.get('REQUESTED_USER')
+workflow_link = os.environ.get('WORKFLOW_LINK')
 
 msg = MIMEMultipart()
 msg['From'] = sender_email
