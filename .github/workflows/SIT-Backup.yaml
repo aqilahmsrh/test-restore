@@ -21,37 +21,44 @@ on:
         required: true
 
 jobs:
-  SIT-backup:
-    # if: inputs.environment == 'sit'
+
+  Send-Email-Devops:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.7
-
-      - name: Install dependencies
+      - name: Print Triggered Workflow Link
+        run: |
+          WORKFLOW_LINK="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          echo "WORKFLOW_LINK=$WORKFLOW_LINK" >> $GITHUB_ENV
+          echo "your $WORKFLOW_LINK"
+          
+      - name: Send Triggered Notification to DevOps
         env:
           SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
-          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
+          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }} 
+          #devops email
+          RECEIVER_EMAIL_TWO: ${{ secrets.RECEIVER_EMAIL_TWO }} 
+          #devops email
+          REQUESTED_USER: ${{ github.event.inputs.name }}
           PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
         run: |
           python -m pip install --upgrade pip
           pip install pipenv 
           pipenv install
           pwd
-
-      - name: Send Triggered Email
-        env:
-          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
-          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
-          PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
-        run: |
           pipenv run python src/send-email.py
+          
+  SIT-backup:
+    runs-on: ubuntu-latest
+    environment:
+      name: try
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Create SITDB Database Dump
         env:
@@ -112,21 +119,20 @@ jobs:
           echo "S3_URI=$S3_URI" >> $GITHUB_ENV
           echo "Uploaded backup to S3: $S3_URI"
           
-      - name: Install dependencies
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+          
+      - name: Send Email S3
         env:
           SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
-          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
+          RECEIVER_EMAIL: ${{ github.event.inputs.email }}
           PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
+          S3_URI: ${{ env.S3_URI }}
         run: |
           python -m pip install --upgrade pip
           pip install pipenv 
           pipenv install
           pwd
-
-      - name: Send Triggered Email
-        env:
-          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
-          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
-          PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
-        run: |
-          pipenv run python src/send-email.py
+          pipenv run python src/send-bucket.py
