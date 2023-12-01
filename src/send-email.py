@@ -10,6 +10,7 @@ receiver_email_two = os.environ.get('RECEIVER_EMAIL_TWO')
 password = os.environ.get('PASSWORD_EMAIL')
 requested_user = os.environ.get('REQUESTED_USER')
 workflow_link = os.environ.get('WORKFLOW_LINK')
+env = os.environ.get('ENV')
 
 receiver_emails = [os.environ.get('RECEIVER_EMAIL'), os.environ.get('RECEIVER_EMAIL_TWO')]
 
@@ -19,7 +20,7 @@ msg['To'] = ', '.join(receiver_emails)
 # msg['To'] = receiver_email
 msg['Subject'] = Header('Some Title', 'utf-8').encode()
 
-body = f"Hi DevOps, your SIT MySQL DUmp is triggered; {workflow_link} by {requested_user}"
+body = f"Hi DevOps, your {env} workflow for database dump is triggered; {workflow_link} by {requested_user}"
 
 msg_content = MIMEText(body, 'plain', 'utf-8')
 msg.attach(msg_content)
