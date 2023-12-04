@@ -20,7 +20,7 @@ msg['From'] = sender_email
 msg['To'] = receiver_email
 msg['Subject'] = Header('Database Backup Request', 'utf-8').encode()
 
-body = """
+body = f"""
 Hi DevOps,
 
 Your {env} workflow for database dump is triggered;
