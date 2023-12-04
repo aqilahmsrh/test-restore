@@ -51,24 +51,30 @@ jobs:
           pipenv install
           pwd
           pipenv run python src/send-email.py
-
-      
+          
       - name: Notify slack
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        uses: abinoda/slack-action@master
+        uses: pullreminders/slack-action@master
         with:
-          args: |
-              {
-                "channel": "[C068H70GLVA]",
-                "blocks": [{
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Hi Team, the UAT Database Dump is requested by ${{ github.event.inputs.name }} ${{ env.WORKFLOW_LINK }}"
-                  }
-                }]
-              } 
+          args: '{\"channel\":\"C068H70GLVA\",\"text\":\"Hi Team, the UAT Database Dump is requested by ${{ github.event.inputs.name }} ${{ env.WORKFLOW_LINK }}\"}'
+      
+      # - name: Notify slack
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      #   uses: abinoda/slack-action@master
+      #   with:
+      #     args: |
+      #         {
+      #           "channel": "[C068H70GLVA]",
+      #           "blocks": [{
+      #             "type": "section",
+      #             "text": {
+      #               "type": "mrkdwn",
+      #               "text": "Hi Team, the UAT Database Dump is requested by ${{ github.event.inputs.name }} ${{ env.WORKFLOW_LINK }}"
+      #             }
+      #           }]
+      #         } 
 
       # - name: Slack Notifications
       #   uses: act10ns/slack@v1
