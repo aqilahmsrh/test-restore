@@ -12,15 +12,20 @@ requested_user = os.environ.get('REQUESTED_USER')
 workflow_link = os.environ.get('WORKFLOW_LINK')
 env = os.environ.get('ENV')
 
-receiver_emails = [os.environ.get('RECEIVER_EMAIL'), os.environ.get('RECEIVER_EMAIL_TWO')]
+# receiver_emails = [os.environ.get('RECEIVER_EMAIL'), os.environ.get('RECEIVER_EMAIL_TWO')]
 
 msg = MIMEMultipart()
 msg['From'] = sender_email
-msg['To'] = ', '.join(receiver_emails)
-# msg['To'] = receiver_email
-msg['Subject'] = Header('Some Title', 'utf-8').encode()
+# msg['To'] = ', '.join(receiver_emails)
+msg['To'] = receiver_email
+msg['Subject'] = Header('Database Backup Request', 'utf-8').encode()
 
-body = f"Hi DevOps, your {env} workflow for database dump is triggered; {workflow_link} by {requested_user}"
+body = f"Hi DevOps,
+
+Your {env} workflow for database dump is triggered;
+
+Workflow link: {workflow_link} 
+Requested by: {requested_user}"
 
 msg_content = MIMEText(body, 'plain', 'utf-8')
 msg.attach(msg_content)
