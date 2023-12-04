@@ -52,13 +52,31 @@ jobs:
           pwd
           pipenv run python src/send-email.py
 
-      - name: Slack Notifications
-        uses: act10ns/slack@v1
+      
+      - name: Notify slack
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: abinoda/slack-action@master
         with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          status: waiting approval
-          config: .github/workflows/testing.yaml
-          message: Hi Team, the UAT Database Dump is requested by ${{ github.event.inputs.name }} ${{ env.WORKFLOW_LINK }}
+          args: |
+              {
+                "channel": "[C068H70GLVA]",
+                "blocks": [{
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Hi Team, the UAT Database Dump is requested by ${{ github.event.inputs.name }} ${{ env.WORKFLOW_LINK }}"
+                  }
+                }]
+              } 
+
+      # - name: Slack Notifications
+      #   uses: act10ns/slack@v1
+      #   with:
+      #     webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     status: waiting approval
+      #     config: .github/workflows/testing.yaml
+      #     message: Hi Team, the UAT Database Dump is requested by ${{ github.event.inputs.name }} ${{ env.WORKFLOW_LINK }}
 
   # manual-trigger:
   #   runs-on: ubuntu-latest
