@@ -20,12 +20,16 @@ msg['From'] = sender_email
 msg['To'] = receiver_email
 msg['Subject'] = Header('Database Backup Request', 'utf-8').encode()
 
-body = f"Hi DevOps,
+body = """
+Hi DevOps,
 
 Your {env} workflow for database dump is triggered;
 
 Workflow link: {workflow_link} 
-Requested by: {requested_user}"
+Requested by: {requested_user}
+
+Thank you.
+"""
 
 msg_content = MIMEText(body, 'plain', 'utf-8')
 msg.attach(msg_content)
