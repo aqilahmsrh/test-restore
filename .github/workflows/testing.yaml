@@ -58,7 +58,7 @@ jobs:
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
           status: waiting approval
           config: .github/workflows/testing.yaml
-          message: Hi Team, the UAT Database Dump is requested by ${{ github.event.inputs.name }} ($WORKFLOW_LINK)
+          message: Hi Team, the UAT Database Dump is requested by ${{ github.event.inputs.name }} ${{ env.WORKFLOW_LINK }}
 
   # manual-trigger:
   #   runs-on: ubuntu-latest
