@@ -52,30 +52,30 @@ jobs:
           pwd
           pipenv run python src/send-email.py
       
-  Backup-MySQL-Database:
-    # if: inputs.environment == 'test'
-    runs-on: ubuntu-latest
-    environment:
-       name: try
+  # Backup-MySQL-Database:
+  #   # if: inputs.environment == 'test'
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #      name: try
        
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v3
 
-      - name: Upload to AWS S3
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.DEVOPS_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.DEVOPS_AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          BUCKET_NAME: ${{ secrets.DEVOPS_S3_BUCKET }}
-        run: |
-            TIMESTAMP=$(date +"%Y%m%d%H%M%S")
-            SIT_LOCAL_DUMP_FILE="dump-127.0.0.1-sit-${TIMESTAMP}.sql"
-            mv test.txt $SIT_LOCAL_DUMP_FILE
-            aws s3 cp $SIT_LOCAL_DUMP_FILE $BUCKET_NAME
-            S3_URI="$BUCKET_NAME$SIT_LOCAL_DUMP_FILE"
-            echo "S3_URI=$S3_URI" >> $GITHUB_ENV
-            echo "Uploaded backup to S3: $S3_URI"
+  #     - name: Upload to AWS S3
+  #       env:
+  #         AWS_ACCESS_KEY_ID: ${{ secrets.DEVOPS_AWS_ACCESS_KEY_ID }}
+  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.DEVOPS_AWS_SECRET_ACCESS_KEY }}
+  #         AWS_REGION: ${{ secrets.AWS_REGION }}
+  #         BUCKET_NAME: ${{ secrets.DEVOPS_S3_BUCKET }}
+  #       run: |
+  #           TIMESTAMP=$(date +"%Y%m%d%H%M%S")
+  #           SIT_LOCAL_DUMP_FILE="dump-127.0.0.1-sit-${TIMESTAMP}.sql"
+  #           mv test.txt $SIT_LOCAL_DUMP_FILE
+  #           aws s3 cp $SIT_LOCAL_DUMP_FILE $BUCKET_NAME
+  #           S3_URI="$BUCKET_NAME$SIT_LOCAL_DUMP_FILE"
+  #           echo "S3_URI=$S3_URI" >> $GITHUB_ENV
+  #           echo "Uploaded backup to S3: $S3_URI"
 
       # - name: Create Test Database Dump
       #   env:
@@ -108,23 +108,23 @@ jobs:
       #     echo "S3_URI=$S3_URI" >> $GITHUB_ENV
       #     echo "Uploaded backup to S3: $S3_URI"
           
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.7
+      # - name: Set up Python
+      #   uses: actions/setup-python@v2
+      #   with:
+      #     python-version: 3.7
           
-      - name: Send Email S3
-        env:
-          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
-          RECEIVER_EMAIL: ${{ github.event.inputs.email }}
-          PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
-          S3_URI: ${{ env.S3_URI }}
-        run: |
-          python -m pip install --upgrade pip
-          pip install pipenv 
-          pipenv install
-          pwd
-          pipenv run python src/send-bucket.py
+      # - name: Send Email S3
+      #   env:
+      #     SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+      #     RECEIVER_EMAIL: ${{ github.event.inputs.email }}
+      #     PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
+      #     S3_URI: ${{ env.S3_URI }}
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install pipenv 
+      #     pipenv install
+      #     pwd
+      #     pipenv run python src/send-bucket.py
       
       # - name: Upload to AWS S3
       #   env:
