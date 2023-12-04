@@ -51,7 +51,16 @@ jobs:
           pipenv install
           pwd
           pipenv run python src/send-email.py
-      
+
+  manual-trigger:
+    runs-on: ubuntu-latest
+    needs: [Send-Email-Devops]
+    steps:
+      - name: Manual Trigger
+        if: github.event_name == 'workflow_dispatch'
+        with:
+          token: ${{ secrets.WORKFLOW_DISPATCH_TOKEN }}
+          
   # Backup-MySQL-Database:
   #   # if: inputs.environment == 'test'
   #   runs-on: ubuntu-latest
