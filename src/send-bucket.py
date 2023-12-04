@@ -13,13 +13,13 @@ env = os.environ.get('ENV')
 msg = MIMEMultipart()
 msg['From'] = sender_email
 msg['To'] = receiver_email
-msg['Subject'] = Header('Some Title', 'utf-8').encode()
+msg['Subject'] = Header('Database Dump Completed', 'utf-8').encode()
 
 # body = 'Hello World!'
 body = f"""
 Hi Team, 
 
-This is the S3 URI of the {env} and DEX{env} database dumps: {s3_uri}. Kindly check.
+The Database Dump process is completed. This is the S3 URI of the {env} and DEX{env} database dumps: {s3_uri}. Kindly check.
 
 Thank you.
 """
