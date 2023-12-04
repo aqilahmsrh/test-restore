@@ -56,20 +56,22 @@ jobs:
         uses: act10ns/slack@v1
         with:
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: waiting approval
+          config: .github/workflows/testing.yaml
           message: Hi Team, the UAT Database Dump is requested by ${{ github.event.inputs.name }}
 
-  manual-trigger:
-    runs-on: ubuntu-latest
-    needs: [Send-Email-Devops]
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+  # manual-trigger:
+  #   runs-on: ubuntu-latest
+  #   needs: [Send-Email-Devops]
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v3
         
-      - name: Manual Trigger
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          echo "Manual trigger step executed"
-          echo "Token: ${{ secrets.WORKFLOW_DISPATCH_TOKEN }}"
+  #     - name: Manual Trigger
+  #       if: github.event_name == 'workflow_dispatch'
+  #       run: |
+  #         echo "Manual trigger step executed"
+  #         echo "Token: ${{ secrets.WORKFLOW_DISPATCH_TOKEN }}"
           
   # Backup-MySQL-Database:
   #   # if: inputs.environment == 'test'
