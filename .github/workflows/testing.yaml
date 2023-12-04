@@ -61,8 +61,9 @@ jobs:
         
       - name: Manual Trigger
         if: github.event_name == 'workflow_dispatch'
-        with:
-          token: ${{ secrets.WORKFLOW_DISPATCH_TOKEN }}
+        run: |
+          echo "Manual trigger step executed"
+          echo "Token: ${{ secrets.WORKFLOW_DISPATCH_TOKEN }}"
           
   # Backup-MySQL-Database:
   #   # if: inputs.environment == 'test'
