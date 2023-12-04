@@ -38,4 +38,4 @@ msg.attach(msg_content)
 context = ssl.create_default_context()
 with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
     server.login(sender_email, password)
-    server.sendmail(sender_email, receiver_emails, msg.as_string())
+    server.sendmail(sender_email, receiver_email, msg.as_string())
