@@ -117,7 +117,7 @@ jobs:
           UAT_BUCKET_NAME: ${{ secrets.UAT_BUCKET }}
         run: |
           aws s3 cp ${{ env.ZIP_FILE }} $UAT_BUCKET_NAME
-          S3_URI="$SIT_BUCKET_NAME${{ env.ZIP_FILE }}"
+          S3_URI="$SIT_BUCKET_NAME$ZIP_FILE"
           echo "S3_URI=$S3_URI" >> $GITHUB_ENV
           echo "Uploaded backup to S3: $S3_URI"
           
@@ -130,6 +130,8 @@ jobs:
         env:
           SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
           RECEIVER_EMAIL: ${{ github.event.inputs.email }}
+          RECEIVER_EMAIL_TWO: ${{ secrets.RECEIVER_EMAIL_TWO }} 
+          #devops email
           PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
           S3_URI: ${{ env.S3_URI }}
           ENV: "UAT"
