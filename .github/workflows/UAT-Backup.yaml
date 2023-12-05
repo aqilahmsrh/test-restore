@@ -41,7 +41,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         uses: pullreminders/slack-action@master
         with:
-          args: '{\"channel\":\"C068H70GLVA\",\"text\":\"Hi Team, the UAT Database Dump has been requested by ${{ github.event.inputs.name }} ${{ env.WORKFLOW_LINK }}\"}'
+          args: '{\"channel\":\"C068H70GLVA\",\"text\":\"Hi Team, the UAT Database Dumps has been requested by ${{ github.event.inputs.name }} ${{ env.WORKFLOW_LINK }}\"}'
           
       - name: Send Triggered Notification to DevOps
         env:
@@ -138,7 +138,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         uses: pullreminders/slack-action@master
         with:
-          args: '{\"channel\":\"C068H70GLVA\",\"text\":\"Hi Team, the UAT Database Dump requested by ${{ github.event.inputs.name }} is complete. This is the S3 URI:${{ env.S3_URI }}\"}'
+          args: '{\"channel\":\"C068H70GLVA\",\"text\":\"Hi Team, the UAT Database Dumps requested by ${{ github.event.inputs.name }} are complete. This is the S3 URI:${{ env.S3_URI }}\"}'
     
       - name: Send Email S3
         env:
