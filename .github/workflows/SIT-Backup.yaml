@@ -34,6 +34,13 @@ jobs:
           WORKFLOW_LINK="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           echo "WORKFLOW_LINK=$WORKFLOW_LINK" >> $GITHUB_ENV
           echo "your $WORKFLOW_LINK"
+
+      - name: Notify slack
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: pullreminders/slack-action@master
+        with:
+          args: '{\"channel\":\"C068H70GLVA\",\"text\":\"Hi Team, the UAT Database Dump has been requested by ${{ github.event.inputs.name }} ${{ env.WORKFLOW_LINK }}\"}'
           
       - name: Send Triggered Notification to DevOps
         env:
@@ -124,6 +131,13 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
+
+      - name: Notify S3
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: pullreminders/slack-action@master
+        with:
+          args: '{\"channel\":\"C068H70GLVA\",\"text\":\"Hi Team, the UAT Database Dump requested by ${{ github.event.inputs.name }} is complete. This is the S3 URI:${{ env.S3_URI }}\"}'
           
       - name: Send Email S3
         env:
