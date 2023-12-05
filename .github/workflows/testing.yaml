@@ -23,41 +23,41 @@ on:
       
 jobs:
 
-  # Send-Email-Devops:
-  #   # if: inputs.environment == 'test'
-  #   runs-on: ubuntu-latest
+  Send-Email-Devops:
+    # if: inputs.environment == 'test'
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v3
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-  #     - name: Print Triggered Workflow Link
-  #       run: |
-  #         WORKFLOW_LINK="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-  #         echo "WORKFLOW_LINK=$WORKFLOW_LINK" >> $GITHUB_ENV
-  #         echo "your $WORKFLOW_LINK"
+      - name: Print Triggered Workflow Link
+        run: |
+          WORKFLOW_LINK="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          echo "WORKFLOW_LINK=$WORKFLOW_LINK" >> $GITHUB_ENV
+          echo "your $WORKFLOW_LINK"
           
-  #     - name: Send Triggered Notification to DevOps
-  #       env:
-  #         SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
-  #         RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
-  #         RECEIVER_EMAIL_TWO: ${{ secrets.RECEIVER_EMAIL_TWO }}
-  #         REQUESTED_USER: ${{ github.event.inputs.name }}
-  #         PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
-  #         ENV: "UAT"
-  #       run: |
-  #         python -m pip install --upgrade pip
-  #         pip install pipenv 
-  #         pipenv install
-  #         pwd
-  #         pipenv run python src/send-email.py
+      - name: Send Triggered Notification to DevOps
+        env:
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
+          RECEIVER_EMAIL_TWO: ${{ secrets.RECEIVER_EMAIL_TWO }}
+          REQUESTED_USER: ${{ github.event.inputs.name }}
+          PASSWORD_EMAIL: ${{ secrets.PASSWORD_EMAIL }}
+          ENV: "UAT"
+        run: |
+          python -m pip install --upgrade pip
+          pip install pipenv 
+          pipenv install
+          pwd
+          pipenv run python src/send-email.py
           
-  #     - name: Notify slack
-  #       env:
-  #         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-  #       uses: pullreminders/slack-action@master
-  #       with:
-  #         args: '{\"channel\":\"C068H70GLVA\",\"text\":\"Hi Team, the UAT Database Dump is requested by ${{ github.event.inputs.name }} ${{ env.WORKFLOW_LINK }}\"}'
+      - name: Notify slack
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: pullreminders/slack-action@master
+        with:
+          args: '{\"channel\":\"C068H70GLVA\",\"text\":\"Hi Team, the UAT Database Dump has been requested by ${{ github.event.inputs.name }} ${{ env.WORKFLOW_LINK }}\"}'
       
       # - name: Notify slack
       #   env:
